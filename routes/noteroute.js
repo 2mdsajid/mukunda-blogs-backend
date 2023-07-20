@@ -317,6 +317,36 @@ router.post("/addcomment", async (req, res) => {
   }
 });
 
+
+router.get("/getnotebynoteid/:noteid", async (req, res) => {
+  try {
+    const { noteid } = req.params
+    console.log("🚀 ~ file: noteroute.js:323 ~ router.get ~ noteid:", noteid)
+    const note = await Note.findOne({ noteid })
+
+    // if note is not there, return the whole process without any data
+    if (!note) {
+      return res.status(400).json({
+        message: "Unable to fetch the note! Check your credentials",
+        status: 400,
+        meaning: "badrequest",
+      });
+    }
+    res.status(200).json({
+      note,
+      message: "Note fetched successfully",
+      status: 200,
+      meaning: "ok",
+    })
+  } catch (error) {
+    return res.status(501).json({
+      message: error.message,
+      status: 501,
+      meaning: "internalerror",
+    })
+  }
+})
+
 router.get("/getnotebyid/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -434,6 +464,50 @@ router.get("/getallnotes", async (req, res) => {
       status: 501,
       meaning: "internalerror",
     });
+  }
+});
+
+// transformed notes
+// to get all the notes in the draft
+router.get('/gettransformednotes', async (req, res) => {
+  try {
+      const allnotes = await Note.find();
+
+      if (!allnotes) {
+          return res.status(400).json({
+              message: 'Unable to fetch the draft notes',
+              status: 400,
+              meaning: 'badrequest'
+          });
+      }
+
+      const transformedNotes = allnotes.map((note) => ({
+          _id: note._id,
+          title: note.title,
+          commentslength: note.comments.length,
+          views: note.views,
+          category: note.category,
+          upvotes: note.upvote.length,
+          isupdated: note.isupdated,
+          intro: note.intro,
+          noteid: note.noteid,
+          date: note.date,
+          review: note.review,
+          published: note.published
+      }));
+
+      return res.status(200).json({
+          notes: transformedNotes,
+          message: 'Draft notes fetched successfully',
+          status: 200,
+          meaning: 'ok'
+      });
+  } catch (error) {
+      return res.status(501).json({
+          message: error.message,
+          status: 501,
+          meaning: 'internalerror'
+      });
   }
 });
 
@@ -699,9 +773,7 @@ router.post("/adminlogin", async (req, res) => {
   try {
     // Find admin with matching username and password
     const admin = await Admin.findOne({ username, password });
-
     if (admin) {
-      // Admin found
       res.status(200).json({
         isAdmin: true,
         message: "Admin login successful",
