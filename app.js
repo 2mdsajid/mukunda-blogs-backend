@@ -36,7 +36,7 @@ app.use(function (req, res, next) {
 });
 
 app.get('/',(req, res) => {
-    res.json({msg:`hello this is a site by ${process.env.MONGOUSER}`})
+    res.json({msg:`hello this is a site by ${process.env.MONGOPASS}oplhdhdgdhdhhdhddhd`})
 })
 
 //before AUTH.JS loading so that it effects
