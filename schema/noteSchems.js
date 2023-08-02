@@ -19,7 +19,7 @@ const note = mongoose.Schema({
     },
     author: {
         type: String,
-        default: 'Aayushma'
+        default: 'Mukunda'
     },
     intro: {
         type: String,
