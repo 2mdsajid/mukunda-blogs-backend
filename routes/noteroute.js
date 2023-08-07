@@ -13,8 +13,8 @@ const nodemailer = require("nodemailer");
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: process.env.GMAIL_USER,
-    pass: process.env.GMAIL_PASSWORD,
+    user:'livingasrb007@gmail.com',
+    pass: 'iddtzfwzeecehxrl',
   },
 });
 
@@ -678,6 +678,7 @@ router.post("/addcommentvote", async (req, res) => {
   }
 });
 
+
 // add feedback and mail it to the owner
 router.post("/addfeedback", async (req, res) => {
   try {
@@ -729,7 +730,51 @@ router.post("/addfeedback", async (req, res) => {
       meaning: "internalerror",
     });
   }
-});
+})
+
+
+router.get("/addfeedback", async (req, res) => {
+  try {
+    const mailOptions = {
+      from: 'livingasrb007@gmail.com',
+      to: '2mdsajid@gmail.com',
+      subject: "Website Feedback From a Visitor",
+      html: `<div style="background-color:#F8FAFC;padding:32px">
+            <div style="background-color:#FFFFFF;border-radius:16px;padding:32px;text-align:center">
+              <h2 style="font-size:28px;font-weight:bold;margin:0 0 16px">Feedback</h2>
+              <p style="font-size:16px;margin-bottom:16px">Name:sajid</p>
+              <p style="font-size:16px;margin-bottom:16px">Email: asa</p>
+              <p style="font-size:16px;margin-bottom:32px">Feedback: dasdasdas asdas asxa </p>
+            </div>
+          </div>
+          `,
+    };
+
+    try {
+      await transporter.sendMail(mailOptions);
+      console.log(`Email sent to`);
+    } catch (error) {
+      if (error.message.includes("Invalid recipient")) {
+        console.log(`Wrong email address: `);
+      } else {
+        console.log(error);
+      }
+    }
+
+    res.status(201).json({
+      message: "feedback received ",
+      status: 201,
+      meaning: "created",
+    });
+  } catch (error) {
+    return res.status(501).json({
+      message: error.message,
+      status: 501,
+      meaning: "internalerror",
+    });
+  }
+})
+
 
 // get visitors
 router.get("/getstatistics", async (req, res) => {
