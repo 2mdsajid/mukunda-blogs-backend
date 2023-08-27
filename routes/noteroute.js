@@ -443,7 +443,7 @@ router.get("/getrecentnotes", async (req, res) => {
 // get all notes --- published, not published, drafted
 router.get("/getallnotes", async (req, res) => {
   try {
-    const notes = await Note.find({ review: false, published: true });
+    const notes = await Note.find({ review: false, published: true }).limit(6);
     if (!notes) {
       return res.status(400).json({
         message: "Unable to fetch the notes",
