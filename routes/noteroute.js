@@ -321,7 +321,6 @@ router.post("/addcomment", async (req, res) => {
 router.get("/getnotebynoteid/:noteid", async (req, res) => {
   try {
     const { noteid } = req.params
-    console.log("🚀 ~ file: noteroute.js:323 ~ router.get ~ noteid:", noteid)
     const note = await Note.findOne({ noteid })
 
     // if note is not there, return the whole process without any data
@@ -338,6 +337,7 @@ router.get("/getnotebynoteid/:noteid", async (req, res) => {
       status: 200,
       meaning: "ok",
     })
+
   } catch (error) {
     return res.status(501).json({
       message: error.message,
@@ -377,9 +377,9 @@ router.get("/getnotebyid/:id", async (req, res) => {
 });
 
 // get all note of the category
-router.post("/getnotesbycategory", async (req, res) => {
+router.get("/getnotesbycategory/:category", async (req, res) => {
   try {
-    const { category } = req.body;
+    const { category } = req.params;
     const notes = await Note.find({ category: category, review: false }).select(
       "_id title noteid intro date readtime introimage"
     );
