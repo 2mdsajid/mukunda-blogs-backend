@@ -412,7 +412,7 @@ router.get("/getrecentnotes", async (req, res) => {
   try {
     const allnotes = await Note.find({ review: false, published: true })
       .sort({ date: -1 }) // Sort by createdAt field in descending order
-      .limit(6) // Return only the latest 6 notes
+      .limit(4) // Return only the latest 6 notes
       .exec(); // Execute the query to get the notes
 
     if (!allnotes) {
